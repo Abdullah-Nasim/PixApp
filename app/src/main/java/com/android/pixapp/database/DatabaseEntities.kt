@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
  */
 
 /**
- * DatabasePicture represents a video entity in the database.
+ * DatabasePicture represents a picture entity in the database.
  */
 @Entity
 data class DatabasePicture constructor(
@@ -21,7 +21,9 @@ data class DatabasePicture constructor(
         val downloads: Int,
         val tags: String)
 
-
+/**
+ * DatabaseUser represents a user entity in the database.
+ */
 @Entity
 data class DatabaseUser constructor(
         @PrimaryKey
