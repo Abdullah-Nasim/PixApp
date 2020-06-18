@@ -1,7 +1,8 @@
-package com.android.pixapp
+package com.android.pixapp.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.android.pixapp.R
 
 class MainActivity : AppCompatActivity() {
 
