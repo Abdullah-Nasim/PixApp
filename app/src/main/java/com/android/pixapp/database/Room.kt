@@ -15,11 +15,11 @@ interface PictureDao {
 
 @Dao
 interface UserDao {
-    @Query("select * from databaseuser")
-    fun getUsers(): LiveData<List<DatabaseUser>>
+    @Query("select * from databaseuser where email=:email")
+    fun getUser(email: String): DatabaseUser
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll( videos: List<DatabaseUser>)
+    @Insert
+    fun insert(user: DatabaseUser)
 }
 
 @Database(entities = [DatabasePicture::class, DatabaseUser::class], version = 1)

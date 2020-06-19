@@ -17,9 +17,9 @@ interface PixAppService {
 }
 
 /**
- * Main entry point for network access. Call like `DevByteNetwork.devbytes.getPlaylist()`
+ * Main entry point for network access
  */
-object DevByteNetwork {
+object PixAppNetwork {
 
     // Configure retrofit to parse JSON and use coroutines
     private val retrofit = Retrofit.Builder()
@@ -28,7 +28,7 @@ object DevByteNetwork {
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .build()
 
-    val devbytes = retrofit.create(PixAppService::class.java)
+    val pixBay = retrofit.create(PixAppService::class.java)
 
 }
 
