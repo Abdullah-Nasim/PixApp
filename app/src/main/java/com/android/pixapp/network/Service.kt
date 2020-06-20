@@ -16,7 +16,7 @@ import retrofit2.http.Query
  */
 interface PixAppService {
     @GET("api/")
-    fun getPicturesAsync(@Query("key") key: String, @Query("per_page") perPage: Int): Deferred<NetworkPictureContainer>
+    fun getPicturesAsync(@Query("key") key: String, @Query("per_page") perPage: Int, @Query("q") type: String): Deferred<NetworkPictureContainer>
 }
 
 /**

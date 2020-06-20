@@ -30,7 +30,7 @@ class PicturesRepository(private val database: PixAppDatabase) {
      */
     suspend fun refreshPictures() {
         withContext(Dispatchers.IO) {
-            val pictures = PixAppNetwork.pixBay.getPicturesAsync("17107458-6d6f29048c565da5d2f27c121", 200).await()
+            val pictures = PixAppNetwork.pixBay.getPicturesAsync("17107458-6d6f29048c565da5d2f27c121", 200, "flowers").await()
             database.pictureDao.insertAll(pictures.asDatabaseModel())
         }
     }
