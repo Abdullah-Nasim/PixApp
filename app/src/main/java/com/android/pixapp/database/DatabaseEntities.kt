@@ -16,12 +16,18 @@ import com.android.pixapp.domain.PixAppUser
 @Entity
 data class DatabasePicture constructor(
         @PrimaryKey
+        val id: Int,
         val url: String,
         val uploader: String,
         val likes: Int,
         val views: Int,
         val downloads: Int,
-        val tags: String)
+        val tags: String,
+        val previewURL: String,
+        val imageSize: Int,
+        val type: String,
+        val comments: Int,
+        val favorites: Int)
 
 /**
  * DatabaseUser represents a user entity in the database.
@@ -40,12 +46,18 @@ data class DatabaseUser constructor(
 fun List<DatabasePicture>.asDomainModel(): List<PixAppPicture> {
     return map {
         PixAppPicture(
+            id = it.id,
             url = it.url,
             uploader = it.uploader,
             likes = it.likes,
             views = it.views,
             downloads = it.downloads,
-            tags = it.tags)
+            tags = it.tags,
+            previewURL = it.previewURL,
+            imageSize = it.imageSize,
+            type = it.type,
+            comments = it.comments,
+            favorites = it.favorites)
     }
 }
 

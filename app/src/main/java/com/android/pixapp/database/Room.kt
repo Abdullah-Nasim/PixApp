@@ -9,6 +9,9 @@ interface PictureDao {
     @Query("select * from databasepicture")
     fun getPictures(): LiveData<List<DatabasePicture>>
 
+    @Query("select * from databasepicture where id=:id")
+    fun getPicture(id: Int): DatabasePicture
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll( videos: List<DatabasePicture>)
 }

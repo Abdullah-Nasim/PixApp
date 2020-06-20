@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".PixAppApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -22,6 +23,7 @@
         </activity>
         <activity android:name=".ui.MainActivity" />
         <activity android:name=".ui.RegisterActivity" />
+        <activity android:name=".ui.PictureDetailsActivity" />
     </application>
 
 </manifest>

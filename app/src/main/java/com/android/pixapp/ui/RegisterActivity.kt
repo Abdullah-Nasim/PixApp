@@ -1,7 +1,9 @@
 package com.android.pixapp.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -11,21 +13,24 @@ import com.android.pixapp.databinding.ActivityRegisterBinding
 import com.android.pixapp.viewmodels.RegisterViewModel
 import java.lang.NumberFormatException
 
+/**
+ * The responsibility of this activity is to display the registration screen
+ */
 class RegisterActivity: AppCompatActivity(){
 
-    lateinit var binding: ActivityRegisterBinding
+    private lateinit var binding: ActivityRegisterBinding
 
     private val registerViewModel: RegisterViewModel by lazy {
         val activity = requireNotNull(this)
         ViewModelProvider(this, RegisterViewModel.Factory(activity.application))
-            .get(RegisterViewModel::class.java)
-    }
+            .get(RegisterViewModel::class.java) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_register)
 
+        // Setting the lifecycleOwner so DataBinding can observe LiveData
         binding.lifecycleOwner = this
 
         binding.viewModel = registerViewModel
@@ -45,15 +50,23 @@ class RegisterActivity: AppCompatActivity(){
                 binding.confirmPassword.error = "Password and Confirm Password Mismatch"
         })
 
-        registerViewModel.mAgeLivedata.observe(this, Observer {
+        registerViewModel.mAgeLiveData.observe(this, Observer {
             try{
-                if(!registerViewModel.isValidAge(registerViewModel.mAgeLivedata.value!!.toInt()))
+                if(!registerViewModel.isValidAge(registerViewModel.mAgeLiveData.value!!.toInt()))
                     binding.age.error = "Enter Valid Age"
             }catch (ex: NumberFormatException){ Log.e("NumberFormatException", "Unable to parse Age to String")}
         })
 
         registerViewModel.mRegisterMediator.observe(this, Observer { validationResult ->
             binding.registerButton.isEnabled = validationResult
+        })
+
+        registerViewModel.eventOpenScreenLiveData.observe(this, Observer {
+            if(it == "OPEN_MAIN_SCREEN"){ startActivity(Intent(this, MainActivity::class.java)) }
+        })
+
+        registerViewModel.eventShowToastLiveData.observe(this, Observer {
+            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
         })
 
     }

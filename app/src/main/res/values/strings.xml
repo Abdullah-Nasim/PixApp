@@ -6,4 +6,6 @@
     <string name="Register">Register</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="age">Age</string>
+    <string name="uploaded_by">Uploaded By:</string>
+    <string name="log_out">Log Out</string>
 </resources>

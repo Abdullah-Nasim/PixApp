@@ -2,6 +2,7 @@ package com.android.pixapp.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
+import com.android.pixapp.database.DatabasePicture
 import com.android.pixapp.database.PixAppDatabase
 import com.android.pixapp.database.asDomainModel
 import com.android.pixapp.domain.PixAppPicture
@@ -29,9 +30,17 @@ class PicturesRepository(private val database: PixAppDatabase) {
      */
     suspend fun refreshPictures() {
         withContext(Dispatchers.IO) {
-            val pictures = PixAppNetwork.pixBay.getPictures().await()
+            val pictures = PixAppNetwork.pixBay.getPicturesAsync("17107458-6d6f29048c565da5d2f27c121", 200).await()
             database.pictureDao.insertAll(pictures.asDatabaseModel())
         }
+    }
+
+    suspend fun getStoredPicture(pictureId: Int): DatabasePicture?{
+        var picture: DatabasePicture? = null
+        withContext(Dispatchers.IO){
+            picture = database.pictureDao.getPicture(pictureId)
+        }
+        return picture
     }
 
 }

@@ -11,21 +11,24 @@ import com.android.pixapp.R
 import com.android.pixapp.databinding.ActivityLoginBinding
 import com.android.pixapp.viewmodels.LoginViewModel
 
+/**
+ * The responsibility of this activity is to display the login screen
+ */
 class LoginActivity: AppCompatActivity(){
 
-    lateinit var binding: ActivityLoginBinding
+    private lateinit var binding: ActivityLoginBinding
 
     private val loginViewModel: LoginViewModel by lazy {
         val activity = requireNotNull(this)
         ViewModelProvider(this, LoginViewModel.Factory(activity.application))
-            .get(LoginViewModel::class.java)
-    }
+            .get(LoginViewModel::class.java) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
 
+        // Setting the lifecycleOwner so DataBinding can observe LiveData
         binding.lifecycleOwner = this
 
         binding.viewModel = loginViewModel
@@ -44,15 +47,16 @@ class LoginActivity: AppCompatActivity(){
             binding.loginButton.isEnabled = validationResult
         })
 
-        loginViewModel.mOpenScreenLiveData.observe(this, Observer {
+        loginViewModel.eventOpenScreenLiveData.observe(this, Observer {
             if(it == "OPEN_REGISTER_SCREEN"){
                 startActivity(Intent(this, RegisterActivity::class.java))
             } else if(it == "OPEN_MAIN_SCREEN"){
                 startActivity(Intent(this, MainActivity::class.java))
+                finish()
             }
         })
 
-        loginViewModel.mShowToast.observe(this, Observer {
+        loginViewModel.eventShowToastLiveData.observe(this, Observer {
             Toast.makeText(this, it,Toast.LENGTH_SHORT).show()
         })
 

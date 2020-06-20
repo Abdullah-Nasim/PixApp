@@ -11,6 +11,8 @@ import com.android.pixapp.R
 import com.android.pixapp.database.getDatabase
 import com.android.pixapp.domain.PixAppUser
 import com.android.pixapp.repository.UserRepository
+import com.android.pixapp.utils.AppSharedPreferences
+import com.android.pixapp.utils.SingleLiveData
 import kotlinx.coroutines.*
 import java.lang.Exception
 
@@ -25,7 +27,11 @@ class RegisterViewModel(application: Application): ViewModel(){
 
     val mConfirmPasswordLiveData = MutableLiveData<String>()
 
-    val mAgeLivedata = MutableLiveData<String>()
+    val mAgeLiveData = MutableLiveData<String>()
+
+    var eventOpenScreenLiveData  = SingleLiveData<String>()
+
+    val eventShowToastLiveData = MutableLiveData<String>()
 
     val mRegisterMediator = MediatorLiveData<Boolean>()
 
@@ -40,18 +46,18 @@ class RegisterViewModel(application: Application): ViewModel(){
         mRegisterMediator.addSource(mEmailLiveData) { validateForm() }
         mRegisterMediator.addSource(mPasswordLiveData) { validateForm() }
         mRegisterMediator.addSource(mConfirmPasswordLiveData) { validateForm() }
-        mRegisterMediator.addSource(mAgeLivedata){ validateForm() }
+        mRegisterMediator.addSource(mAgeLiveData){ validateForm() }
     }
 
     private fun validateForm() {
 
         if(mEmailLiveData.value != null && mPasswordLiveData.value != null
-            && mConfirmPasswordLiveData.value != null && mAgeLivedata.value != null)
+            && mConfirmPasswordLiveData.value != null && mAgeLiveData.value != null)
 
             mRegisterMediator.value = isEmailValid(mEmailLiveData.value!!)
                     && isPasswordValid(mPasswordLiveData.value!!)
                     && isConfirmPassValid(mConfirmPasswordLiveData.value!!)
-                    && isValidAge(mAgeLivedata.value!!.toInt())
+                    && isValidAge(mAgeLiveData.value!!.toInt())
 
     }
 
@@ -88,7 +94,7 @@ class RegisterViewModel(application: Application): ViewModel(){
      */
     fun onClick(view: View) {
         if(view.id == R.id.registerButton){
-            val registerUser = PixAppUser(mEmailLiveData.value!!, mPasswordLiveData.value!!, mAgeLivedata.value!!.toInt())
+            val registerUser = PixAppUser(mEmailLiveData.value!!, mPasswordLiveData.value!!, mAgeLiveData.value!!.toInt())
             viewModelScope.launch { createUser(registerUser) }
         }
     }
@@ -100,10 +106,11 @@ class RegisterViewModel(application: Application): ViewModel(){
         try{
             withContext(Dispatchers.IO){
                 userRepository.createUser(registerUser)
+                eventShowToastLiveData.value = "Registration Successful"
+                AppSharedPreferences.saveUserLoginState(registerUser.email)
+                eventOpenScreenLiveData.value = "OPEN_HOME_SCREEN"
             }
-        }catch (ex: Exception){
-            ex.printStackTrace()
-        }
+        }catch (ex: Exception){ eventShowToastLiveData.value = "User with this email already exists" }
     }
 
     override fun onCleared() {
@@ -111,13 +118,13 @@ class RegisterViewModel(application: Application): ViewModel(){
         mRegisterMediator.removeSource(mEmailLiveData)
         mRegisterMediator.removeSource(mPasswordLiveData)
         mRegisterMediator.removeSource(mConfirmPasswordLiveData)
-        mRegisterMediator.removeSource(mAgeLivedata)
+        mRegisterMediator.removeSource(mAgeLiveData)
     }
 
     /**
-     * Factory for constructing DevByteViewModel with parameter
+     * Factory for constructing RegisterViewModel with parameter
      */
-    class Factory(val app: Application) : ViewModelProvider.Factory {
+    class Factory(private val app: Application) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(RegisterViewModel::class.java)) {
                 @Suppress("UNCHECKED_CAST")

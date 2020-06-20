@@ -57,7 +57,7 @@
             android:imeOptions="actionDone"
             android:layout_marginTop="20dp"
             android:hint="@string/age"
-            android:text="@={viewModel.mAgeLivedata}"
+            android:text="@={viewModel.mAgeLiveData}"
             tools:ignore="Autofill" />
 
         <Button

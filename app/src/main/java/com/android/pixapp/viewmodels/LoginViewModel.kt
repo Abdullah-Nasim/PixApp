@@ -11,6 +11,7 @@ import com.android.pixapp.R
 import com.android.pixapp.database.getDatabase
 import com.android.pixapp.domain.PixAppUser
 import com.android.pixapp.repository.UserRepository
+import com.android.pixapp.utils.AppSharedPreferences
 import com.android.pixapp.utils.SingleLiveData
 import kotlinx.coroutines.*
 
@@ -23,11 +24,11 @@ class LoginViewModel(application: Application): ViewModel() {
 
     val mPasswordLiveData = MutableLiveData<String>()
 
-    val mShowToast = MutableLiveData<String>()
-
     val mLoginPasswordMediator = MediatorLiveData<Boolean>()
 
-    var mOpenScreenLiveData  = SingleLiveData<String>()
+    var eventOpenScreenLiveData  = SingleLiveData<String>()
+
+    val eventShowToastLiveData = MutableLiveData<String>()
 
     private val userRepository = UserRepository(getDatabase(application))
 
@@ -36,9 +37,13 @@ class LoginViewModel(application: Application): ViewModel() {
     private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
     init {
-        mLoginPasswordMediator.value = false
-        mLoginPasswordMediator.addSource(mEmailLiveData) { validateForm() }
-        mLoginPasswordMediator.addSource(mPasswordLiveData) { validateForm() }
+        if(!AppSharedPreferences.getUserLoginState().isNullOrEmpty())
+            eventOpenScreenLiveData.value = "OPEN_MAIN_SCREEN"
+        else{
+            mLoginPasswordMediator.value = false
+            mLoginPasswordMediator.addSource(mEmailLiveData) { validateForm() }
+            mLoginPasswordMediator.addSource(mPasswordLiveData) { validateForm() }
+        }
     }
 
     private fun validateForm() {
@@ -69,14 +74,16 @@ class LoginViewModel(application: Application): ViewModel() {
             viewModelScope.launch {
                 val user = loginUser()
                 when {
-                    user == null -> mShowToast.value = "User not found"
-                    user.password == mPasswordLiveData.value!! -> mOpenScreenLiveData.value = "OPEN_MAIN_SCREEN"
-                    else -> mShowToast.value = "Password is incorrect"
+                    user == null -> eventShowToastLiveData.value = "User not found"
+                    user.password == mPasswordLiveData.value!! -> {
+                        eventShowToastLiveData.value = "Login Successful"
+                        AppSharedPreferences.saveUserLoginState(user.email)
+                        eventOpenScreenLiveData.value = "OPEN_MAIN_SCREEN"
+                    }
+                    else -> eventShowToastLiveData.value = "Password is incorrect"
                 }
             }
-        }else if(view.id == R.id.registerButton){
-            mOpenScreenLiveData.value = "OPEN_REGISTER_SCREEN"
-        }
+        }else if(view.id == R.id.registerButton){ eventOpenScreenLiveData.value = "OPEN_REGISTER_SCREEN" }
     }
 
     /**
@@ -101,9 +108,9 @@ class LoginViewModel(application: Application): ViewModel() {
     }
 
     /**
-     * Factory for constructing DevByteViewModel with parameter
+     * Factory for constructing LoginViewModel with parameter
      */
-    class Factory(val app: Application) : ViewModelProvider.Factory {
+    class Factory(private val app: Application) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
                 @Suppress("UNCHECKED_CAST")
