@@ -106,11 +106,13 @@ class RegisterViewModel(application: Application): ViewModel(){
         try{
             withContext(Dispatchers.IO){
                 userRepository.createUser(registerUser)
-                eventShowToastLiveData.value = "Registration Successful"
-                AppSharedPreferences.saveUserLoginState(registerUser.email)
-                eventOpenScreenLiveData.value = "OPEN_HOME_SCREEN"
             }
-        }catch (ex: Exception){ eventShowToastLiveData.value = "User with this email already exists" }
+            AppSharedPreferences.saveUserLoginState(registerUser.email)
+            eventShowToastLiveData.value = "Registration Successful"
+            eventOpenScreenLiveData.value = "OPEN_MAIN_SCREEN"
+        }catch (ex: Exception){
+            eventShowToastLiveData.value = "User with this email already exists"
+        }
     }
 
     override fun onCleared() {

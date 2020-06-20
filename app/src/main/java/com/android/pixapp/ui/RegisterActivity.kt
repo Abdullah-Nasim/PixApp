@@ -62,7 +62,14 @@ class RegisterActivity: AppCompatActivity(){
         })
 
         registerViewModel.eventOpenScreenLiveData.observe(this, Observer {
-            if(it == "OPEN_MAIN_SCREEN"){ startActivity(Intent(this, MainActivity::class.java)) }
+            if(it == "OPEN_MAIN_SCREEN"){
+                val intent = Intent(this, MainActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+                finish()
+            }
         })
 
         registerViewModel.eventShowToastLiveData.observe(this, Observer {
