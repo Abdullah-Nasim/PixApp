@@ -15,7 +15,7 @@ MVVM with Clean Architecture is pretty good. It goes one step further in separat
 # Libraries Used
 
 - **Retrofit** - For networking
-- **Coroutines** - For getting of the Main thread
+- **Coroutines** - For getting off the Main thread
 - **Moshi** - For parsing the JSON API response to kotlin data objects
 - **Room** - For persisting pictures data
 - **Glide** - For images rendering
