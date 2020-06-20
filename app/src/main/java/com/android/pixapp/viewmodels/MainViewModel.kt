@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.android.pixapp.database.getDatabase
-import com.android.pixapp.repository.PicturesRepository
+import com.android.pixapp.repositories.PicturesRepository
 import com.android.pixapp.utils.AppSharedPreferences
 import com.android.pixapp.utils.SingleLiveData
 import kotlinx.coroutines.CoroutineScope

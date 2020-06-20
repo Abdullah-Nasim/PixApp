@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.android.pixapp.R
 import com.android.pixapp.database.getDatabase
 import com.android.pixapp.domain.PixAppUser
-import com.android.pixapp.repository.UserRepository
+import com.android.pixapp.repositories.UserRepository
 import com.android.pixapp.utils.AppSharedPreferences
 import com.android.pixapp.utils.SingleLiveData
 import kotlinx.coroutines.*

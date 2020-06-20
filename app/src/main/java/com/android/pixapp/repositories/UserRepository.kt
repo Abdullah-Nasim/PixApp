@@ -1,4 +1,4 @@
-package com.android.pixapp.repository
+package com.android.pixapp.repositories
 
 import com.android.pixapp.database.PixAppDatabase
 import com.android.pixapp.database.asDomainModel

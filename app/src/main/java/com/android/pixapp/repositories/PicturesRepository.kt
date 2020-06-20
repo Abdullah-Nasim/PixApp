@@ -1,4 +1,4 @@
-package com.android.pixapp.repository
+package com.android.pixapp.repositories
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
